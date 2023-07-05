@@ -13,7 +13,6 @@ const News = (props) => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  document.title = `${capitalize(props.category)} - NewsApp`;
 
   const updatenews = async () => {
     props.setProgress(10);
@@ -31,6 +30,7 @@ const News = (props) => {
 
   useEffect(() => {
     updatenews();
+    document.title = `${capitalize(props.category)} - NewsApp`;
     // eslint-disable-next-line
   }, []);
 
@@ -45,9 +45,12 @@ const News = (props) => {
   // };
 
   const fetchMoreData = async () => {
-    // eslint-disable-next-line no-const-assign
-    setPage(++page);
-    let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apikey=${props.apiKey}&page=${this.state.page}&pageSize=${props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${
+      props.country
+    }&category=${props.category}&apikey=${props.apiKey}&page=${
+      page + 1
+    }&pageSize=${props.pageSize}`;
+    setPage(page + 1);
     let data = await fetch(url);
     let parsedData = await data.json();
     setArticles(articles.concat(parsedData.articles));
@@ -56,7 +59,7 @@ const News = (props) => {
 
   return (
     <>
-      <h1 className="text-center my-4">
+      <h1 className="text-center" style={{ margin: '80px 0 35px' }}>
         NewsApp - Top {capitalize(props.category)} Headlines
       </h1>
       {loading && <Spinner />}
